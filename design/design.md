@@ -1,7 +1,7 @@
 # 异步操作系统设计方案
 
-* [v1](https://github.com/async-kernel/documents/blob/987e79fdf8c7844c2285a315a07c8d4a9c653414/design/design.md)：20201013-异步操作系统设计方案.docx，由王润基起草；
- * [v2]：20201213-异步操作系统设计方案.md
+ * [v1](https://github.com/async-kernel/documents/blob/987e79fdf8c7844c2285a315a07c8d4a9c653414/design/design.md)：20201013-异步操作系统设计方案.docx，由王润基起草；
+ * [v2](https://github.com/async-kernel/documents/blob/4dec7ffbe498d7e275f3bd2c3240c62c4057759f/design/design.md)：20201213-异步操作系统设计方案.md
 
 # **整体目标**
 
