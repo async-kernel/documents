@@ -1,6 +1,6 @@
 # 异步操作系统设计方案
 
-* [v1]：20201013-异步操作系统设计方案.docx，由王润基起草；
+* [v1](https://github.com/async-kernel/documents/blob/987e79fdf8c7844c2285a315a07c8d4a9c653414/design/design.md)：20201013-异步操作系统设计方案.docx，由王润基起草；
 
 ## 整体目标
 
