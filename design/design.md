@@ -4,6 +4,7 @@
  * [v2](https://github.com/async-kernel/documents/blob/4dec7ffbe498d7e275f3bd2c3240c62c4057759f/design/design.md)：20201213-异步操作系统设计方案.md
  * [v3](https://github.com/async-kernel/documents/blob/c524e7d691de2645b8b9d61f3457ca30615ec897/design/design.md)：20210408-异步操作系统设计方案.docx
  * [v4](https://github.com/async-kernel/documents/blob/7b2b0a2432dc9807a89257e751b7cc008bcfcd38/design/design.md)：20210506-异步操作系统设计方案.md
+ * [v5] ( )：20210526-异步操作系统设计方案.md
 
 # 整体目标
 
@@ -500,6 +501,7 @@ Cache里没有中断信息，初始化的方式；Cache里有其他中断的信�
   - 一个“交换机”
   - 来自外部的中断也经过它，然后可以去掉核的标签，保留进程/线程/协程的标签？
 ```
+
 ### 内核的进程化改造
 
 将操作系统内核改成一个进程，从而把内核地址空间和用户进程地址空间视为两个独立的地址空间，把系统调用视进程间通信的特例。
@@ -793,6 +795,9 @@ IO 核如何访问不同用户进程的IO buffer而不用频繁切页表？
 
 * 金枪鱼之夜：Build an Async Runtime for Rust from Scratch[https://tuna.moe/event/2020/rust-async-runtime/](https://tuna.moe/event/2020/rust-async-runtime/?fileGuid=473QyY5re6tvXb3w)
 * async collections in github[https://github.com/stjepang](https://github.com/stjepang?fileGuid=473QyY5re6tvXb3w)
+* [https://stevenbai.top/rust/futures_explained_in_200_lines_of_rust/](https://stevenbai.top/rust/futures_explained_in_200_lines_of_rust/?fileGuid=473QyY5re6tvXb3w)
+* [https://stevenbai.top/rust/build_your_own_block_on/](https://stevenbai.top/rust/build_your_own_block_on/?fileGuid=473QyY5re6tvXb3w)
+* [https://stevenbai.top/rust/build_your_own_executor/](https://stevenbai.top/rust/build_your_own_executor/?fileGuid=473QyY5re6tvXb3w)
 ## 多核支持
 
 * [[第三版 tutorial 多核支持文档]](https://github.com/wyfcyx/osnotes/blob/master/book/v3/K210%E7%A7%BB%E6%A4%8D%E4%B8%8E%E5%A4%9A%E6%A0%B8%E6%94%AF%E6%8C%81%E6%8A%A5%E5%91%8A.md#%E5%A4%9A%E6%A0%B8%E6%94%AF%E6%8C%81?fileGuid=473QyY5re6tvXb3w),[[代码仓库]](https://github.com/wyfcyx/rCore-Tutorial/tree/multicore?fileGuid=473QyY5re6tvXb3w)
