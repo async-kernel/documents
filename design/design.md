@@ -6,27 +6,32 @@
  * [v4](https://github.com/async-kernel/documents/blob/7b2b0a2432dc9807a89257e751b7cc008bcfcd38/design/design.md)：20210506-异步操作系统设计方案.md
  * [v5](https://github.com/async-kernel/documents/blob/f85ea19e02217fc5e111309354566b4880046e0f/design/design.md)：20210526-异步操作系统设计方案.md
  * [v6](https://github.com/async-kernel/documents/blob/deb5c68fb24c53f07ba318a96fc2899e803c46cb/design/design.md)：20210824-异步操作系统设计方案.md
+ * v7
 
 
 # 整体目标
 
-在RISC-V平台上设计并实现一个基于Rust语言的异步操作系统。最终目标是，利用Rust语言和开源工具链的特征，在操作系统内核中实现细粒度的并发安全、模块化和可定制特征；利用Rust语言的异步机制，优化操作系统内核的并发性能；向应用程序提供的异步系统调用接口，优化操作系统的系统调用访问性能；结合LLVM中Rust语言编译器的异步支持技术，完善操作系统的进程、线程和协程概念，统一进程、线程和协程的调度机制；利用RISC-V平台的用户态中断技术，优化操作系统的信号和进程通信性能；开发原型系统，设计用户态测试用例库和操作系统动态分析跟踪工具，对异步操作系统的特征进行定量性的评估。
+在RISC-V平台上设计并实现一个基于Rust语言的异步操作系统。最终目标是，利用Rust语言和工具链的特征，在操作系统内核中实现细粒度的并发安全、模块化和可定制特征；利用Rust语言的异步机制，改进操作系统内核的模块结构，优化操作系统内核的并发性能；结合Rust语言编译器的异步支持技术，完善操作系统的进程、线程和协程概念，统一进程、线程和协程的调度机制；利用RISC-V平台的用户态中断技术，向应用程序提供的异步系统调用接口，优化操作系统的系统调用访问性能和操作系统的信号和进程通信性能；开发模块化的异步操作系统原型系统，设计用户态测试用例库和操作系统动态分析跟踪工具，对异步操作系统的特征进行定量性的评估。
 
-1. 利用Rust语言和开源工具链的特征，在操作系统内核中实现细粒度的并发安全、构件化和可定制特征；（基于rCore和zCore来判断，这一条应该是可行的，还需要改进；）
-2. 利用Rust语言的异步无栈协程机制，优化操作系统内核的并发性能；（rCore和zCore的实现，在内核中支持[异步]([https://github.com/rcore-os/executor](https://github.com/rcore-os/executor?fileGuid=473QyY5re6tvXb3w))是现成的；需要做的事，针对异步机制对现有的内核模块进行优化(贾：文件系统中的read和write的系统调用接口已完成改造，还需要对内核中的文件系统模块进行改造；网络模块：在qemu中用virtio；需要询问K210上的无线模块状态；串口模块)；陈渝老师可以支持SiFive的有网络的板子）
-3. 向应用程序提供的异步系统调用接口，优化操作系统的系统调用访问性能；（贾：aCore中已经实现了read和write的异步系统调用（fork用时长，但也不需要改成异步，原因是，不会多次用它）；张译仁：系统调用的自动化异步改造：对语言有依赖，对rust实现自动化异步改造是可行，加上一个trait或宏就行；可以先改造几个，然后自动搞；异步系统调用接口可以有多种不同的实现；）
-4. 结合LLVM中Rust语言编译器的异步支持技术，完善操作系统的进程、线程和协程概念，统一进程、线程和协程的调度机制；
-    1. 刘丰源对Rust编译器有过分析：目前还没有分析清楚；
-    2. 进程由OS内核管理；用户线程由函数库管理；协程目前是由编译器生成代码或用户函数库管理；（线程和协程都可以用语言或函数库实现，类似GO语言的支持；）
-    3. 需要做的事是，分析进程、线程、协程中的数据结构和状态维护；然后尝试访问和控制这些信息；（进程、线程和协程的控制块可以分成用户态控制块和内核态控制块两部分）
-    4. 最终实现：协程是基本的调度单位，只对协程进行调度。在不同情况下体现为进程切换、线程切换和协程切换；（单队列的同步开销和多队列的负载均衡开销需要折中；统一的原则是，只有一家可写，多家可读；统一的方法是，代码由内核提供，状态数据只有所有者可写，其他进程可读；）
-5. 利用RISC-V平台的用户态中断技术，优化操作系统的信号和进程间通信性能；
-    1. 在FPGA上实现RV的用户态中断；
-    2. 优化信号的实现；
-    3. 进程间通信：第一次通过内核建立通道；中间的信息交互只是请求和响应队列的访问，没有进程切换；结束时通过内核删除通道；
-    4. 在单核下利用用户态中断，也可以提高IPC性能；
-6. 开发原型系统，设计用户态测试用例库和操作系统动态分析跟踪工具，对异步操作系统的特征进行定量性的评估。
-    1. IO 密集型程序（以 Web 服务器为例）能够达到接近专用系统的高性能（高并发，低延时）。
+## 已完成或正在进行中的工作
+1. 利用Rust语言和工具链的特征，在操作系统内核中实现细粒度的并发安全、模块化和可定制特征；
+    * 杨德睿 - [rCore-Tutorial-in-single-workspace](https://github.com/YdrMaster/rCore-Tutorial-in-single-workspace)：模块化的rCore教学操作系统；
+    * 贾越凯 - [arceos](https://github.com/rcore-os/arceos)：模块化的unikernel操作系统；
+2. 利用Rust语言的异步机制，改进操作系统内核的模块结构，优化操作系统内核的并发性能；
+    * 吴一凡 - [Exploring Asynchronous Operating System Design Using Rust](https://github.com/wyfcyx/MScAdvancedComputing/blob/main/IndividualProject/individual_project.pdf)
+    * 杨德睿 - [fast-trap](https://github.com/YdrMaster/fast-trap)：裸机应用程序陷入处理流程的框架，旨在保证处理性能的同时尽量复用代码。
+3. 结合Rust语言编译器的异步支持技术，完善操作系统的进程、线程和协程概念，统一进程、线程和协程的调度机制；
+    * 赵方亮、廖东海 - [rCore-N](https://github.com/zflcs/rCore-N)：基于vDSO实现的共享协程调度器框架。它是UnifieldScheduler的后续工作。
+    * richardanaya/[executor](https://github.com/richardanaya/executor): A minimalistic async/await executor for Rust；
+    * 王文智 - [UnifieldScheduler](https://github.com/AmoyCherry/UnifieldScheduler)：支持优先级的协程调度器框架；
+    * 蒋周奇、车春池 - [tornado-os](https://github.com/HUST-OS/tornado-os)：基于共享调度器的异步内核
+4. 利用RISC-V平台的用户态中断技术，向应用程序提供的异步系统调用接口，优化操作系统的系统调用访问性能和操作系统的信号和进程通信性能；
+    * 田凯夫 - [uintr](https://github.com/U-interrupt/uintr)：qemu模拟器上的RISC-V用户态中断设计与实现
+    * 项晨东 - [usr-intr](https://github.com/OS-F-4/usr-intr)：qemu模拟器上的x86用户态中断支持
+    * 尤予阳、贺鲲鹏 - [软硬协同的用户态中断](https://gallium70.github.io/rv-n-ext-impl/)
+5. 开发原型系统，设计用户态测试用例库和操作系统动态分析跟踪工具，对异步操作系统的特征进行定量性的评估。
+    * 陈志扬 - [code-debug](https://github.com/chenzhiy2001/code-debug)：支持Rust语言的源代码级内核调试工具
+
 # 异步操作系统中的基本概念
 
 ## IO 接口类型：同步与异步
