@@ -38,3 +38,4 @@ client 通过 POSIX 库函数的方式使用 server 提供的功能，并将 fun
 - 不同 client 向同一个 server 发请求的同步问题：用户态中断的 64 pending bits 可以区分优先级，同优先级 client 需要有先后的顺序，server 会记录某一位 pending bit 对应的已注册的 client，从而可以在中断到来时看其中哪些 client 发出了请求，内核会共享一块区域给所有 client ，库函数将里面的时间戳填入到请求中，这样 server 可以知道请求的先后顺序。
 - 库函数执行的安全性问题：client 一般默认使用 POSIX 接口，Rust 语言是否可以在编译期对接口进行检查，防止 client 非法执行操作获取并篡改 lib 维护的信息，比如改上述的时间戳导致抢占其他 client 的请求。
 - client 之间的通信：根据观察追求性能的应用一般不会搞很多跨地址空间的进程，而是采用多线程的方式。
+- TOCTOU 或 Double Fetch：server 在接收到中断并完成 IPC buffer 的数据检查后，client 可能恶意修改 IPC buffer 内的数据，一种可能的解决办法是 server 先对数据进行一次拷贝，这样会引入一次拷贝开销；如果对大数据进行 remap 可能会造成 TLB shootdown ；共享数据如果连续在多个地址空间内进行传递，则必须从一个 shared buffer 拷贝到另一个。L4 采用的策略是 temporary mapping ，仍需要一次 caller 到 communication window 的拷贝开销。能否通过 Rust 语言的特性来解决这一问题？ 
