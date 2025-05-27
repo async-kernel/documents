@@ -9,6 +9,11 @@ enableGitInfo = true
 [markup.tableOfContents]
   startLevel = 1
 
+[[menu.after]]
+  name = "🔗 Github"
+  url = "https://github.com/AsyncOS/AsyncOS.github.io"
+  weight = 10
+
 [params]
   BookTheme = 'auto'
   BookRepo = 'https://github.com/AsyncOS/AsyncOS.github.io'
