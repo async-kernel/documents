@@ -163,31 +163,28 @@ Rust 的 async 机制需要运行时的配合，其中重要组件如下：
 在一个任务内调用 yield 函数切换到另一任务。yield 会保存当前任务的状态，从任务队列中取出下一个任务，并将当前任务重新加入队列，然后恢复下一任务的状态。实现简单，与语言关系不大。代表：sys_yield 和原来进程/线程的概念。
 
 ```rust
-fn task1() {
-// do work 1
-yield();
-// do work 2
-yield();
-// do work 3
+fn task1() { 
+    // do work 1 
+    yield(); 
+    // do work 2
+    yield();
+    // do work 3
 }
-fn task2() {
-// do work 1
-yield();
-// do work 2
-yield();
-// do work 3
-yield();
-// do work 4
+fn task2() { 
+    // do work 1 
+    yield();
+    // do work 2
+    yield();
+    // do work 3
+    yield();
+    // do work 4
 }
 fn yield(rip, state) {
-let current = Task {
-rip,
-state,
-};
-let next = QUEUE.pop();
-QUEUE.push(current);
-rip = next.rip;
-state = next.state;
+    let current = Task { rip, state,};
+    let next = QUEUE.pop();
+    QUEUE.push(current);
+    rip = next.rip;
+    state = next.state;
 }
 ```
 2. **基于 poll 机制**
@@ -196,37 +193,38 @@ state = next.state;
 
 ```rust
 loop {
-let task = QUEUE.pop();
-match task.poll() {
-Ready => {},
-Pending => QUEUE.push(task),
+    let task = QUEUE.pop();
+    match task.poll() {
+        Ready => {},
+        Pending => QUEUE.push(task),
+    }
 }
-}
+
 fn task.poll() {
-// do work 1
-loop { // sub_task1().await
-match sub_task1.poll() {
-Ready => break,
-Pending => {
-// return Pending, 但下次调用 task2.poll() 时
-// 直接从这里开始
-yield Pending;
-}
-}
-}
-// do work 2
-loop { // sub_task2().await
-match sub_task2.poll() {
-Ready => break,
-Pending => {
-// return Pending, 但下次调用 task2.poll() 时
-// 直接从这里开始
-yield Pending;
-}
-}
-}
-// do work 3
-Ready
+    // do work 1
+    loop { // sub_task1().await
+        match sub_task1.poll() {
+            Ready => break,
+            Pending => {
+            // return Pending, 但下次调用 task2.poll() 时
+            // 直接从这里开始
+            yield Pending;
+            }
+        }
+    }
+    // do work 2
+    loop { // sub_task2().await
+        match sub_task2.poll() {
+            Ready => break,
+            Pending => {
+            // return Pending, 但下次调用 task2.poll() 时
+            // 直接从这里开始
+            yield Pending;
+            }
+        }
+    }
+    // do work 3
+    Ready
 }
 ```
 ### 使用 yield 实现 poll
