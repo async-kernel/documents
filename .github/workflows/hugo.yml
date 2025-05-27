@@ -64,6 +64,8 @@ jobs:
         run: git config core.quotepath false
       - name: Build with Hugo
         run: |
+          # 以防忘记更新主页
+          cp README.md content/_index.md
           hugo \
             --gc \
             --minify \
