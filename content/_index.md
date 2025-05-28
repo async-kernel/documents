@@ -1,4 +1,6 @@
 ---
+title: AsyncOS
+titleOnly: true
 weight: 1
 bookToc: false
 ---
