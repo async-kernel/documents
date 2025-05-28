@@ -10,7 +10,7 @@ enableGitInfo = true
   startLevel = 1
 
 [[menu.after]]
-  name = "🔗 Github"
+  name = "仓库地址"
   url = "https://github.com/AsyncOS/AsyncOS.github.io"
   weight = 10
 
