@@ -16,6 +16,7 @@ enableGitInfo = true
 
 [params]
   BookTheme = 'auto'
+  BookSection = '*'
   BookRepo = 'https://github.com/AsyncOS/AsyncOS.github.io'
   BookEditPath = 'edit/main'
   BookCommitPath = 'commit'

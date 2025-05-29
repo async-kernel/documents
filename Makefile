@@ -12,7 +12,7 @@ update-home: check-hugo
 	@cp README.md content/_index.md
 
 new: update-home
-	@hugo new docs/$(doc)
+	@hugo new $(doc)
 
 serve: update-home
 	@hugo server --minify --theme hugo-book --bind $(BIND) --port $(PORT)
