@@ -13,7 +13,7 @@ bookToc: false
 
 ## 文档列表
 
-- [异步操作系统设计方案](./content/design/overview.md)
+- [异步操作系统设计方案](https://github.com/AsyncOS/AsyncOS.github.io/blob/main/content/design/overview.md)
 
 ## 添加/更新文档
 
